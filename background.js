@@ -14,7 +14,7 @@ function showLoading() {
         loadingOverlay.style.zIndex = "9999";
 
         const loadingText = document.createElement("p");
-        loadingText.textContent = "正在处理中，请稍候...";
+        loadingText.textContent = "正在翻译，请稍候...";
         loadingOverlay.appendChild(loadingText);
 
         document.body.appendChild(loadingOverlay);
@@ -36,24 +36,70 @@ function hideLoading() {
   });
 }
 
-async function sendTranslationRequest(text) {
-  var req = {
-    model: "llama3",
-    prompt: "请将后面的文本翻译为简体中文，仅回复翻译结果即可：" + text,
-    stream: false
-  };
+function escapeStringForJSON(s) {
+    var newstr = "";
+    for (var i=0; i<s.length; i++) {
+        c = s.charAt(i);
+        switch (c) {
+            case '\"':
+                newstr+="\\\"";
+                break;
+            case '\\':
+                newstr+="\\\\";
+                break;
+            case '/':
+                newstr+="\\/";
+                break;
+            case '\b':
+                newstr+="\\b";
+                break;
+            case '\f':
+                newstr+="\\f";
+                break;
+            case '\n':
+                newstr+="\\n";
+                break;
+            case '\r':
+                newstr+="\\r";
+                break;
+            case '\t':
+                newstr+="\\t";
+                break;
+            default:
+                newstr+=c;
+        }
+   }
+   return newstr;
+}
 
+async function sendTranslationRequest(text) {
+  text = escapeStringForJSON(text);
+
+  // 异步获取用户配置的prompt模板
+  const storedData = await browser.storage.local.get('promptTemplate');
+  const promptTemplate = storedData.promptTemplate || `{
+    "model": "llama3",
+    "prompt": "请译为简体中文，仅回复翻译结果：{text}",
+    "stream": false
+  }`;
+
+  // 使用获取到的模板替换文本
+  const prompt = promptTemplate.replace("{text}", text);
+
+  // 发送请求
   const response = await fetch("http://localhost:11434/api/generate", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(req)
+    body: prompt
   });
 
   hideLoading();
 
-  return response.json();
+  // 处理响应
+  const translationResult = await response.json();
+  return translationResult;
 }
 
 function showTranslation(translationResult) {
@@ -93,7 +139,7 @@ function showTranslation(translationResult) {
 // 监听用户选择文本的事件
 browser.contextMenus.create({
   id: "translate",
-  title: "翻译选中的文本",
+  title: "译为简体中文",
   contexts: ["selection"]
 });
 
@@ -106,7 +152,6 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
     // 发送HTTP POST请求到你的API
     sendTranslationRequest(selectedText).then(translationResult => {
       hideLoading();
-      console.log(translationResult);
       showTranslation(translationResult.response);
     });
   }

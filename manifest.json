@@ -1,12 +1,13 @@
 {
   "manifest_version": 2,
   "name": "Ollama Translation",
-  "version": "1.0",
-  "description": "A simple ollama translation extension for Firefox",
-  "permissions": ["contextMenus", "activeTab"],
+  "version": "1.1",
+  "description": "一个调用本机Ollama接口将选中文本翻译为简体中文的扩展。默认使用llama3模型。",
+  "permissions": ["contextMenus", "activeTab", "storage"],
   "background": {
     "scripts": ["background.js"]
   },
+  "options_page": "options.html",
   "icons": {
     "48": "./logo_48x48.jpg",
     "96": "./logo_96x96.jpg"

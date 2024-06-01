@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ollama Translation选项</title>
+  <meta charset="UTF-8">
+  <style>
+    textarea {
+      width: 600px;
+      height: 480px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <label for="promptTemplate">提问模板：</label><br>
+  <textarea id="promptTemplate" placeholder='{
+    "model": "llama3",
+    "prompt": "请译为简体中文，仅回复翻译结果：{text}",
+    "stream": false
+  }'></textarea><br>
+  <button id="save">保存</button>
+
+  <script src="options.js"></script>
+</body>
+</html>
