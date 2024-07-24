@@ -14,7 +14,7 @@ function showLoading() {
         loadingOverlay.style.zIndex = "9999";
 
         const loadingText = document.createElement("p");
-        loadingText.textContent = "正在翻译，请稍候...";
+        loadingText.textContent = "translating...";
         loadingOverlay.appendChild(loadingText);
 
         document.body.appendChild(loadingOverlay);
@@ -79,7 +79,7 @@ async function sendTranslationRequest(text) {
   const storedData = await browser.storage.local.get('promptTemplate');
   const promptTemplate = storedData.promptTemplate || `{
     "model": "llama3",
-    "prompt": "请译为简体中文，仅回复翻译结果：{text}",
+    "prompt": "Translate to Traditional Chinese: {text}",
     "stream": false
   }`;
 
@@ -122,7 +122,7 @@ function showTranslation(translationResult) {
         overlay.appendChild(content);
 
         const closeButton = document.createElement("button");
-        closeButton.textContent = "关闭";
+        closeButton.textContent = "Close";
         closeButton.style.display = "block";
         closeButton.style.margin = "10px auto 0";
         closeButton.onclick = function() {
@@ -139,7 +139,7 @@ function showTranslation(translationResult) {
 // 监听用户选择文本的事件
 browser.contextMenus.create({
   id: "translate",
-  title: "译为简体中文",
+  title: "Ollama translate",
   contexts: ["selection"]
 });
 

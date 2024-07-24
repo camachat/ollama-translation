@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Ollama Translation选项</title>
+  <title>Ollama Translation Options</title>
   <meta charset="UTF-8">
   <style>
     textarea {
@@ -12,13 +12,13 @@
   </style>
 </head>
 <body>
-  <label for="promptTemplate">提问模板：</label><br>
+  <label for="promptTemplate">Prompt Template：</label><br>
   <textarea id="promptTemplate" placeholder='{
     "model": "llama3",
-    "prompt": "请译为简体中文，仅回复翻译结果：{text}",
+    "prompt": "Translate to Traditional Chinese: {text}",
     "stream": false
   }'></textarea><br>
-  <button id="save">保存</button>
+  <button id="save">save</button>
 
   <script src="options.js"></script>
 </body>
