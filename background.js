@@ -78,13 +78,13 @@ async function sendTranslationRequest(text) {
   // 异步获取用户配置的prompt模板
   const storedData = await browser.storage.local.get('promptTemplate');
   const promptTemplate = storedData.promptTemplate || `{
-    "model": "llama3",
-    "prompt": "Translate to Traditional Chinese: {text}",
+    "model": "llama3.1:8b-instruct-q4_K_M",
+    "prompt": "Translate to Traditional Chinese (result only): {text}",
     "stream": false
   }`;
 
   // 使用获取到的模板替换文本
-  const prompt = promptTemplate.replace("{text}", text);
+  const prompt = promptTemplate.replace("{text}", text.replace('"','\\"'));
 
   // 发送请求
   const response = await fetch("http://localhost:11434/api/generate", {
